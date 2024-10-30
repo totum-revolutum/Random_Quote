@@ -12,7 +12,7 @@
       "{{ quote.content }}" <br> <strong>{{ quote.author }}</strong>
     </div>
 
-    <p v-if="copySuccess" class="copy-success">Quote copied to clipboard!</p>
+    <p :class="{ 'copy-success': true, 'hidden': !copySuccess }">Quote copied!</p>
 
     <div v-if="quoteHistory.length" class="quote-history">
       <h3>History:</h3>
@@ -52,11 +52,11 @@ export default {
         this.errorMessage = 'Failed to fetch a quote. Please try again.';
       }
     },
-async generateNewQuote() {
-  const currentQuote = { ...this.quote };
-  this.addQuoteToHistory(currentQuote);
-  await this.fetchQuote();
-}
+  async generateNewQuote() {
+    const currentQuote = { ...this.quote };
+    await this.fetchQuote();
+    this.addQuoteToHistory(currentQuote);
+  }
 ,
     async copyQuoteToClipboard() {
       try {
@@ -115,6 +115,12 @@ button {
 .copy-success {
   color: green;
   margin-top: 10px;
+  transition: visibility 0.3s, opacity 0.3s ease;
+}
+
+.hidden {
+  visibility: hidden;
+  opacity: 0;
 }
 
 .quote-history {
